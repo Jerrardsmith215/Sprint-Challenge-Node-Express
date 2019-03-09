@@ -3,6 +3,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../helpers/actionModel');
 
+// add middleware
+const numberIdCheck = require('../middleware/numberIdCheck');
+
 /* CRUD OPERATIONS */
 
 // Create/post logic
@@ -52,7 +55,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    if (id) {
+    if (numberIdCheck(id)) {
         db
         .get(id)
         .then(action => {
@@ -78,7 +81,37 @@ router.get('/:id', (req, res) => {
     }
     
 })
+
 // Update/put logic
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const changes = req.body
+    if (numberIdCheck(id)) {
+        db
+        .update(id, changes)
+        .then(count => {
+            if (count) {
+                res
+                .status(200)
+                .json({ message: `action ${id} successfully updated!`});
+            } else if (!count) {
+                res
+                .status(404)
+                .json({ err: 'Could not update action with specified ID from database' });
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ err: 'Could not update action...' });
+        });
+    } else {
+        res
+        .status(500)
+        .json({ err: 'Could not update action...'});
+    }
+    
+})
 
 // Delete/remove logic
 
