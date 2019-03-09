@@ -20,7 +20,7 @@ server.use(
     );
 
 // define routes and activate server
-// server.use('/api/projects', projects);
+server.use('/api/projects', projects);
 server.use('/api/actions', actions);
 
 server.listen(port, () => {
