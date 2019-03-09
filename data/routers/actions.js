@@ -109,7 +109,7 @@ router.put('/:id', (req, res) => {
     } else if (!project_id || !description || notes || description.length > 128) {
         res
             .status(400)
-            .json({ err: 'Could not update project (check if project_id/description/notes are valid & desciption < 128 chars!)'})
+            .json({ err: 'Could not update action (check if project_id/description/notes are valid & desciption < 128 chars!)'})
     } else {
         res
         .status(500)
