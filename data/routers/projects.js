@@ -106,10 +106,14 @@ router.put('/:id', (req, res) => {
                 .status(500)
                 .json({ err: 'Could not update project...' });
         });
+    } else if (!name || !description || description.length > 128) {
+        res
+            .status(400)
+            .json({ err: 'Could not update project (check if name/description are valid & desciption < 128 chars!)'})
     } else {
         res
         .status(500)
-        .json({ err: 'Could not update project...'});
+        .json({ err: 'Could not update project (interal error)...'});
     }
     
 })
