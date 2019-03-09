@@ -85,8 +85,9 @@ router.get('/:id', (req, res) => {
 // Update/put logic
 router.put('/:id', (req, res) => {
     const { id } = req.params;
+    const { project_id, description, notes } = req.body
     const changes = req.body
-    if (numberIdCheck(id)) {
+    if ((project_id, description, notes) && description.length < 128) {
         db
         .update(id, changes)
         .then(count => {
@@ -114,5 +115,33 @@ router.put('/:id', (req, res) => {
 })
 
 // Delete/remove logic
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    if (numberIdCheck(id)) {
+        db
+        .remove(id)
+        .then(count => {
+            if (count) {
+                res
+                .status(200)
+                .json({ message: `action ${id} successfully deleted!`});
+            } else if (!count) {
+                res
+                .status(404)
+                .json({ err: 'Could not delete action with specified ID from database' });
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .json({ err: 'Could not delete action...' });
+        });
+    } else {
+        res
+        .status(500)
+        .json({ err: 'Could not delete action...'});
+    }
+    
+})
 
 module.exports = router;
